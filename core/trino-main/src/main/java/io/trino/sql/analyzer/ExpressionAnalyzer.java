@@ -1187,7 +1187,7 @@ public class ExpressionAnalyzer
                                     resolvedType = plannerContext.getTypeManager().fromSqlType(node.getType());
                                 }
                                 catch (TypeNotFoundException e) {
-                                    throw semanticException(TYPE_NOT_FOUND, node, "Unknown resolvedType: %s", node.getType());
+                                    throw semanticException(TYPE_NOT_FOUND, node, "Unknown type: %s", node.getType());
                                 }
 
                                 if (!JSON.equals(resolvedType)) {
@@ -1195,7 +1195,7 @@ public class ExpressionAnalyzer
                                         plannerContext.getMetadata().getCoercion(VARCHAR, resolvedType);
                                     }
                                     catch (IllegalArgumentException e) {
-                                        throw semanticException(INVALID_LITERAL, node, "No literal form for resolvedType %s", resolvedType);
+                                        throw semanticException(INVALID_LITERAL, node, "No literal form for type %s", resolvedType);
                                     }
                                 }
                                 return resolvedType;
@@ -1468,6 +1468,11 @@ public class ExpressionAnalyzer
                     Type type = getExpressionType(expression);
                     if (!type.isComparable()) {
                         throw semanticException(TYPE_MISMATCH, expression, "%s is not comparable, and therefore cannot be used in window function PARTITION BY", type);
+                    }
+                    if (!type.isOrderable()) {
+                        // TODO this is not a hard requirement, just the implication of how we do partitioning right now, using PagesIndex and iterating over ordered values
+                        // to find partition boundaries.
+                        throw semanticException(TYPE_MISMATCH, expression, "%s is not orderable, and therefore cannot be used in window function PARTITION BY", type);
                     }
                 }
             }

@@ -48,6 +48,7 @@ import static io.trino.client.ClientStandardTypes.IPADDRESS;
 import static io.trino.client.ClientStandardTypes.JSON;
 import static io.trino.client.ClientStandardTypes.KDB_TREE;
 import static io.trino.client.ClientStandardTypes.MAP;
+import static io.trino.client.ClientStandardTypes.NUMBER;
 import static io.trino.client.ClientStandardTypes.P4_HYPER_LOG_LOG;
 import static io.trino.client.ClientStandardTypes.QDIGEST;
 import static io.trino.client.ClientStandardTypes.REAL;
@@ -134,6 +135,7 @@ public final class JsonDecodingUtils
             case IPADDRESS:
             case UUID:
             case DECIMAL:
+            case NUMBER:
             case CHAR:
             case GEOMETRY:
             case SPHERICAL_GEOGRAPHY:
